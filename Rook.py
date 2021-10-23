@@ -7,14 +7,14 @@ class Rook(Piece.Piece):
     def __str__(self):
         return "R"
 
-    def move(self,row,col):
-        if(row == self.row) or (col == self.col):
+    def move(self,row,col,blocked):
+        if((row == self.row) or (col == self.col)) and not blocked:
             return True
         else:
             return False
 
-    def capture(self,row,col):
-        if(row == self.row) or (col == self.col):
+    def capture(self,row,col, blocked):
+        if self.move(row,col,blocked):
             return True
         else:
             return False
