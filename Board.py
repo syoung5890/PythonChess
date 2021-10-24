@@ -162,6 +162,10 @@ class Board:
         print(self.gameboard[row][col])
         print(self.selectedPiece)
         if self.castle(self.selectedPiece.color,row,col):
+            if self.turn == "WHITE":
+                self.turn = "BLACK"
+            else:
+                self.turn = "WHITE"
             return True
         temp = copy.deepcopy(self)
         print(temp.turn)
