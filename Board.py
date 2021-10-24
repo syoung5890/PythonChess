@@ -161,6 +161,8 @@ class Board:
         print("enter target")
         print(self.gameboard[row][col])
         print(self.selectedPiece)
+        if self.castle(self.selectedPiece.color,row,col):
+            return True
         temp = copy.deepcopy(self)
         print(temp.turn)
         #         print(temp.selectedPiece)
@@ -195,10 +197,11 @@ class Board:
             return False
 
     def kingInCheck(self, color):
+        temp = copy.deepcopy(self)
         if color == "WHITE":
             # LOOP THROUGH BLACK PIECES AND CHECK IF ANY PIECES CAN ATTACK WHITE KING
-            for x in self.blackPiecesList:
-                if self.capturePiece(x, self.whiteKing.row, self.whiteKing.col):
+            for x in temp.blackPiecesList:
+                if temp.capturePiece(x, temp.whiteKing.row, temp.whiteKing.col):
                     print(x)
                     print("king in check")
                     return True
@@ -206,12 +209,163 @@ class Board:
             return False
         else:
             # LOOP THROUGH WHITE PIECES AND CHECK IF ANY PIECES CAN ATTACK BLACK KING
-            for x in self.whitePiecesList:
-                if self.capturePiece(x, self.blackKing.row, self.blackKing.col):
+            for x in temp.whitePiecesList:
+                if temp.capturePiece(x, temp.blackKing.row, temp.blackKing.col):
                     print("king in check")
                     return True
             print("king not in check")
             return False
 
-    def kingInCheckMate(color):
+    def kingInCheckMate(self,color):
         pass
+
+    def castle(self,color,row,col):
+        print("ENTER CASTLE")
+        print(self.selectedPiece)
+        if self.kingInCheck(color):
+            print("KING IN CHECK CAN't CASTLE")
+            return False
+        elif self.selectedPiece.__str__() == "K":
+            print("PIECE IS KING")
+            if self.selectedPiece.color == "WHITE":
+                print("PIECE IS WHITE")
+                print("ROW ", row)
+                print("COL ", col)
+                if row == 7:
+                    if col == 2:
+                        if self.gameboard[7][0].__str__() == "R" and not self.isPieceInWay(self.selectedPiece,7,0):
+                            if self.selectedPiece.numOfMoves == 0 and self.gameboard[7][0].numOfMoves == 0:
+                                print("CAN CASTLE")
+                                temp = copy.deepcopy(self)
+                                temp.gameboard[7][2] = self.selectedPiece
+                                temp.gameboard[7][4] = 0
+                                temp.selectedPiece.row = 7
+                                temp.selectedPiece.col = 2
+                                temp.selectedPiece.numOfMoves += 1
+                                temp.gameboard[7][3] = self.gameboard[7][0]
+                                temp.gameboard[7][0] = 0
+                                temp.gameboard[7][3].col = 3
+                                temp.gameboard[7][3].numOfMoves +=1
+                                if temp.kingInCheck(temp.turn):
+                                    return False
+                                else:
+                                    self.gameboard[7][2] = self.selectedPiece
+                                    self.gameboard[7][4] = 0
+                                    self.selectedPiece.row = 7
+                                    self.selectedPiece.col = 2
+                                    self.selectedPiece.numOfMoves += 1
+                                    self.gameboard[7][3] = self.gameboard[7][0]
+                                    self.gameboard[7][0] = 0
+                                    self.gameboard[7][3].col = 3
+                                    self.gameboard[7][3].numOfMoves += 1
+                                    return True
+                            else:
+                                return False
+                        else:
+                            return False
+
+                    elif col == 6:
+                        if self.gameboard[7][7].__str__() == "R" and not self.isPieceInWay(self.selectedPiece,7,7):
+                            if self.selectedPiece.numOfMoves == 0 and self.gameboard[7][7].numOfMoves == 0:
+                                temp = copy.deepcopy(self)
+                                temp.gameboard[7][6] = self.selectedPiece
+                                temp.gameboard[7][4] = 0
+                                temp.selectedPiece.row = 7
+                                temp.selectedPiece.col = 6
+                                temp.selectedPiece.numOfMoves += 1
+                                temp.gameboard[7][5] = self.gameboard[7][0]
+                                temp.gameboard[7][7] = 0
+                                temp.gameboard[7][5].col = 3
+                                temp.gameboard[7][5].numOfMoves += 1
+                                if temp.kingInCheck(self.turn):
+                                    return False
+                                else:
+                                    self.gameboard[7][6] = self.selectedPiece
+                                    self.gameboard[7][4] = 0
+                                    self.selectedPiece.row = 7
+                                    self.selectedPiece.col = 6
+                                    self.selectedPiece.numOfMoves += 1
+                                    self.gameboard[7][5] = self.gameboard[7][0]
+                                    self.gameboard[7][7] = 0
+                                    self.gameboard[7][5].col = 3
+                                    self.gameboard[7][5].numOfMoves += 1
+                                    return True
+                            else:
+                                return False
+                        else:
+                            return False
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                if row == 0:
+                    if col == 2:
+                        if self.gameboard[0][0].__str__() == "R" and not self.isPieceInWay(self.selectedPiece,0,0):
+                            if self.selectedPiece.numOfMoves == 0 and self.gameboard[0][0].numOfMoves == 0:
+                                print("CAN CASTLE")
+                                temp = copy.deepcopy(self)
+                                temp.gameboard[0][2] = self.selectedPiece
+                                temp.gameboard[0][4] = 0
+                                temp.selectedPiece.row = 0
+                                temp.selectedPiece.col = 2
+                                temp.selectedPiece.numOfMoves += 1
+                                temp.gameboard[0][3] = self.gameboard[7][0]
+                                temp.gameboard[0][0] = 0
+                                temp.gameboard[0][3].col = 3
+                                temp.gameboard[0][3].numOfMoves +=1
+                                if temp.kingInCheck(temp.turn):
+                                    return False
+                                else:
+                                    self.gameboard[0][2] = self.selectedPiece
+                                    self.gameboard[0][4] = 0
+                                    self.selectedPiece.row = 0
+                                    self.selectedPiece.col = 2
+                                    self.selectedPiece.numOfMoves += 1
+                                    self.gameboard[0][3] = self.gameboard[7][0]
+                                    self.gameboard[0][0] = 0
+                                    self.gameboard[0][3].col = 3
+                                    self.gameboard[0][3].numOfMoves += 1
+                                    return True
+                            else:
+                                return False
+                        else:
+                            return False
+
+                    elif col == 6:
+                        if self.gameboard[0][7].__str__() == "R" and not self.isPieceInWay(self.selectedPiece,0,7):
+                            if self.selectedPiece.numOfMoves == 0 and self.gameboard[0][7].numOfMoves == 0:
+                                temp = copy.deepcopy(self)
+                                temp.gameboard[0][6] = self.selectedPiece
+                                temp.gameboard[0][4] = 0
+                                temp.selectedPiece.row = 0
+                                temp.selectedPiece.col = 6
+                                temp.selectedPiece.numOfMoves += 1
+                                temp.gameboard[0][5] = self.gameboard[0][0]
+                                temp.gameboard[0][7] = 0
+                                temp.gameboard[0][5].col = 3
+                                temp.gameboard[0][5].numOfMoves += 1
+                                if temp.kingInCheck(self.turn):
+                                    return False
+                                else:
+                                    self.gameboard[0][6] = self.selectedPiece
+                                    self.gameboard[0][4] = 0
+                                    self.selectedPiece.row = 0
+                                    self.selectedPiece.col = 6
+                                    self.selectedPiece.numOfMoves += 1
+                                    self.gameboard[0][5] = self.gameboard[0][0]
+                                    self.gameboard[0][7] = 0
+                                    self.gameboard[0][5].col = 3
+                                    self.gameboard[0][5].numOfMoves += 1
+                                    return True
+                            else:
+                                return False
+                        else:
+                            return False
+                    else:
+                        return False
+                else:
+                    return False
+        else:
+            return False
+
